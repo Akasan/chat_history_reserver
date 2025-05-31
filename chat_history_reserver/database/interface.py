@@ -1,3 +1,4 @@
+from langchain_core.prompts import ChatPromptTemplate
 from enum import StrEnum
 from pydantic import BaseModel
 from abc import ABC, abstractmethod
@@ -38,3 +39,6 @@ class IDatabase(ABC):
     def dump(self, conversation_id: str, format: DumpFormat, filename: str) -> str:
         pass
 
+    @abstractmethod
+    def to_chat_prompt_template(self, conversation_id: str) -> ChatPromptTemplate:
+        pass

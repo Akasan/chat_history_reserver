@@ -1,3 +1,4 @@
+from langchain_core.prompts import ChatPromptTemplate
 import json
 from pydantic import BaseModel
 from .interface import IDatabase, DumpFormat
@@ -59,3 +60,12 @@ class DictDatabase(IDatabase):
             with open(filename, "w", encoding="utf-8") as f:
                 result = [history.dict() for history in self._db[conversation_id]]
                 json.dump(result, f, indent=2)
+
+    def to_chat_prompt_template(self, conversation_id: str) -> ChatPromptTemplate:
+        items = [item.dict() for item in self._db[conversation_id]]
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                (item["role"], item["message"]) for item in items
+            ]
+        )
+        return prompt
